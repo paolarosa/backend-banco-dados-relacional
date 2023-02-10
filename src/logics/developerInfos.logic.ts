@@ -29,7 +29,6 @@ const createDeveloper = async (req: Request, res: Response): Promise<Response> =
         return res.status(400).json({ message: `Missing required keys: name.` });
     }
     const queryResult: DeveloperResult = await client.query(queryString)
-    console.log(queryResult)
     return res.status(201).json(queryResult.rows[0])
 }
 
@@ -59,7 +58,6 @@ const createDeveloperInfo = async (req: Request, res: Response): Promise<Respons
         text: queryString,
         values: [queryResult.rows[0].id, developerId]
     }  
-    /*  queryResult = await client.query(queryConfig) */
     return res.status(201).json(queryResult.rows[0])
 }
 
@@ -70,17 +68,10 @@ const getDevelopersAll = async (req: Request, res: Response): Promise<Response> 
   FROM developers AS dev
   LEFT JOIN developer_infos inf ON dev."infosId" = inf.id;
   ` 
- /*  SELECT
-  de.*,
-  inf."developerSince",
-  inf."preferredOS" 
-  FROM developers de
-  JOIN developer_infos inf ON de."infosId" = inf.id;  */
   const queryConfig: QueryConfig = {
     text: queryString,
   }
   const queryResult: DevelopInfoResult = await client.query(queryConfig)
-  console.log(queryResult)
   return res.json(queryResult.rows)
   
   }
@@ -139,9 +130,6 @@ const updateDeveloper = async (req: Request,res: Response): Promise<Response> =>
       .json({ message: `Required keys are name or email` });
   }
   const queryResult: DeveloperResult = await client.query(queryConfig);
- /*  const searchId = queryResult.rows.find((el: any) => {
-    return el.id === request.params.id;
-  }); */
   return res.status(200).json(queryResult.rows[0]); 
 };
 

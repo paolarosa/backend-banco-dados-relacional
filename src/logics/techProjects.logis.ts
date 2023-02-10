@@ -18,12 +18,6 @@ const createProject = async (req: Request, res: Response): Promise<Response> =>{
 if(queryResultExists.rowCount === 0){
     return res.status(404).json({ message: 'Developer not found!'})
 }
-  /* const validate = queryResultExists.rows.find((el) => {
-    return el.email === req.body.email;
-  });
-  if (validate) {
-    return res.status(409).json({ message: `Email already exists` });
-  }   */
     const queryString: string = format(
         `
         INSERT INTO projects (%I)
@@ -52,14 +46,10 @@ LEFT JOIN technologies tec ON ptec."technologyId" = tec.id
 ;
 
   ` 
-/*   de.*,
-inf."developerSince",
-inf."preferredOS" */
   const queryConfig: QueryConfig = {
     text: queryString,
   }
   const queryResult = await client.query(queryConfig)
-  console.log(queryResult)
   return res.json(queryResult.rows)
 }
 
@@ -122,22 +112,12 @@ const getProjects = async (req: Request, res: Response): Promise<Response> => {
       text: queryFormat,
       values: [params.id],
     };
-    /* if (
-      !request.body.hasOwnProperty("name") ||
-      !request.body.hasOwnProperty("email")
-    ) {
-      return response 
-        .status(400)
-        .json({ message: `Required keys are name or email` });
-    } */
+
     if(!req.body.name && !req.body.description && !req.body.estimatedTime && !req.body.repository&&
       !req.body.startDate && !req.body.endDate && !req.body.developerId){
        return res.status(400).json({ message: `Required keys: name, description, estimatedTime, repository, startDate, endDate, developerId.` });
    }
     const queryResult = await client.query(queryConfig);
-   /*  const searchId = queryResult.rows.find((el: any) => {
-      return el.id === request.params.id;
-    }); */
     return res.status(200).json(queryResult.rows[0]); 
   };
 
@@ -165,11 +145,6 @@ FROM projects pro
     LEFT JOIN technologies tec ON ptec."technologyId" = tec.id
 WHERE de.id = $1;
     `
-    /* SELECT pro.*, ptec."technologyId", tec."name" technologyName
-    FROM projects pro
-    LEFT JOIN projects_technologies ptec ON ptec."projectId" = pro.id
-    LEFT JOIN technologies tec ON ptec."technologyId" = tec.id
-    WHERE pro.id = $1;` */
   
     const queryConfig: QueryConfig = {
       text: queryString,

@@ -59,7 +59,6 @@ const validateSincePreferKeys = async (req: Request, res: Response, next: NextFu
     const keys: Array<string> = Object.keys(req.body)
     const requiredKeys: Array<iInfoKeys> = ['developerSince', 'preferredOS']
     const containsAllRequired: boolean = keys.every((key: any) => {return requiredKeys.includes(key)}) 
-     console.log(requiredKeys)
     if(!containsAllRequired){
       keys.map((el:any)=>{
         el !== "developerSince" && el !== "preferredOS" && delete req.body[`${el}`]
@@ -72,7 +71,6 @@ const validateProjectKeys = async (req: Request, res: Response, next: NextFuncti
     const keys: Array<string> = Object.keys(req.body)
     const requiredKeys: Array<iProjectKeys> = ['name', 'description', 'estimatedTime', 'repository', 'startDate', 'developerId']
     const containsAllRequired: boolean = keys.every((key: any) => {return requiredKeys.includes(key)}) 
-     console.log(requiredKeys)
     if(!containsAllRequired){
       keys.map((el:any)=>{
         el !== "name" && el !== "description" && el !== "estimatedTime" && el !== "repository" && el !== "startDate" && el !== "developerId"
