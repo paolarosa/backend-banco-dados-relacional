@@ -10,7 +10,7 @@ app.use(express.json())
 app.post("/developers", validateKeysNameEmail, createDeveloper);
 app.post("/developers/:id/infos", ensureDevelopExists, validateSincePreferKeys, createDeveloperInfo);
 app.get("/developers", getDevelopersAll);
-app.get("/developers/:id", getDevelopers);
+app.get("/developers/:id",ensureDevelopExists, getDevelopers);
 app.patch("/developers/:id",ensureDevelopExists, validateKeysNameEmail, updateDeveloper);
 app.patch("/developers/:id/infos",ensureDevelopExists,validateSincePreferKeys, updateDeveloperInfo);
 app.delete("/developers/:id", deleteDeveloper);

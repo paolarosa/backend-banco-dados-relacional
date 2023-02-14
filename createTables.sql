@@ -1,7 +1,3 @@
-CREATE DATABASE developers;
-
-CREATE TYPE OSS AS ENUM ('Windows', 'Linux', 'MacOS');
-
 CREATE TABLE IF NOT EXISTS developer_infos(
 "id" SERIAL PRIMARY KEY,
 "developerSince" DATE NOT NULL,
@@ -16,11 +12,6 @@ CREATE TABLE IF NOT EXISTS developers(
 FOREIGN KEY ("infosId") REFERENCES developer_infos("id")
 );
 
-    SELECT * FROM developers;
-    SELECT * FROM developer_infos;
-    SELECT * FROM developers de
-    JOIN developer_infos inf ON de."infosId" = inf.id
-   /*  WHERE de.id = 1; se quiser um develop especifico */
 
 CREATE TABLE IF NOT EXISTS projects(
 "id" SERIAL PRIMARY KEY,
@@ -34,25 +25,22 @@ CREATE TABLE IF NOT EXISTS projects(
 
 CREATE TABLE IF NOT EXISTS technologies(
 "id" SERIAL PRIMARY KEY,
-"name" VARCHAR(30) NOT NULL,
+"name" VARCHAR(30) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS projects_technologies(
 "id" SERIAL PRIMARY KEY,
-"addedIn" DATE NOT NULL,
-)
+"addedIn" DATE NOT NULL
+);
 
 INSERT INTO technologies(id, name)
 VALUES
-    (1, "JavaScript"),
-    (2, "Python"),
-    (3, "React"),
-    (4, "Express.js"),
-    (5, "HTML"),
-    (6, "CSS"),
-    (7, "Django"),
-    (8, "PostgreSQL"),
-    (9, "MongoDB");
-
-
-    
+    (1, 'JavaScript'),
+    (2, 'Python'),
+    (3, 'React'),
+    (4, 'Express.js'),
+    (5, 'HTML'),
+    (6, 'CSS'),
+    (7, 'Django'),
+    (8, 'PostgreSQL'),
+    (9, 'MongoDB');
