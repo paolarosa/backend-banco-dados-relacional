@@ -1,3 +1,5 @@
+CREATE TYPE OSS AS ENUM ('Windows', 'Linux', 'MacOS');
+
 CREATE TABLE IF NOT EXISTS developer_infos(
 "id" SERIAL PRIMARY KEY,
 "developerSince" DATE NOT NULL,
