@@ -45,6 +45,29 @@ const createDeveloperInfo = async (req: Request, res: Response): Promise<Respons
   if(req.body.preferredOS !== 'Windows' &&  req.body.preferredOS !== 'Linux' && req.body.preferredOS !== 'MacOS'){
     return res.status(400).json({ message: `PreferredOS are Windows, Linux or MacOS` })
   }
+  const queryDeveloper: string = `
+SELECT * FROM developers
+WHERE id = $1;`;
+const queryConfigDeveloper: QueryConfig = {
+  text: queryDeveloper,
+  values: [developerId]
+}
+const queryResultDeveloper= await client.query(queryConfigDeveloper);
+const validateDeveloper  = queryResultDeveloper.rows.find((el) => {
+ return el.developerInfoId
+});
+if (validateDeveloper) {  
+  return res.status(409).json({ message: `Info already exists` });
+} 
+  const queryAlredyExists: string        = `
+  SELECT * FROM developer_infos;`;
+const queryResultExists: DeveloperResult = await client.query(queryAlredyExists);
+const validate = queryResultExists.rows.find((el) => {
+  return el.email === req.body.email;
+});
+if (validate) {
+  return res.status(409).json({ message: `Email already exists` });
+} 
   let queryString: string = format(
     `
         INSERT INTO developer_infos (%I)
@@ -117,7 +140,7 @@ const updateDeveloper = async (req: Request, res: Response): Promise<Response> =
   const queryAlredyExists: string = `
   SELECT * FROM developers;`;
   const queryResultExists: DeveloperResult = await client.query(queryAlredyExists);
-  const validate                           = queryResultExists.rows.find((el) => {
+  const validate  = queryResultExists.rows.find((el) => {
     return el.email === req.body.email;
   });
   if (validate) {
@@ -155,9 +178,10 @@ const updateDeveloper = async (req: Request, res: Response): Promise<Response> =
 const updateDeveloperInfo = async (req: Request, res: Response): Promise<Response> => {
   const developerId: number     = parseInt(req.params.id)
   const infoData: iInfosRequest = req.body
-  if(req.body.preferredOS !== 'Windows' &&  req.body.preferredOS !== 'Linux' && req.body.preferredOS !== 'MacOS'){
+  if(req.params.id)
+  if(req.body.preferredOS && req.body.preferredOS !== 'Windows' &&  req.body.preferredOS !== 'Linux' && req.body.preferredOS !== 'MacOS'){
     return res.status(400).json({ message: `PreferredOS are Windows, Linux or MacOS` })
-  }
+  } 
   let   queryString: string     = format(
     `
       SELECT *
@@ -166,6 +190,7 @@ const updateDeveloperInfo = async (req: Request, res: Response): Promise<Respons
     developerId
   )
   let queryResult: InfosResult = await client.query(queryString)
+
   let queryStringUpdate: string = format(
     `
   UPDATE developer_infos
@@ -179,14 +204,14 @@ const updateDeveloperInfo = async (req: Request, res: Response): Promise<Respons
     text  : queryStringUpdate,
     values: [queryResult.rows[0].developerInfoId]
   }
-  if (
+   if (
     !req.body.hasOwnProperty("developerSince") &&
     !req.body.hasOwnProperty("preferredOS")
   ) {
     return res
       .status(400)
       .json({ message: `Required keys are developerSince or preferredOS` });
-  }
+  } 
   const queryResultUpdated = await client.query(queryConfigUpdate)
   return res.status(201).json(queryResultUpdated.rows[0])
 }

@@ -80,5 +80,36 @@ const validateProjectKeys = async (req: Request, res: Response, next: NextFuncti
     return next()
 }
 
+const ensureDevelopBodyExists = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
 
-export { ensureDevelopExists, ensureProjectExists, validateKeysNameEmail, validateSincePreferKeys, validateProjectKeys }
+  if(req.body.developerId){
+    const developerId: number = req.body.developerId
+    const queryString: string = `
+    SELECT COUNT(*)
+    FROM developers
+    WHERE id = $1;
+    `
+    const queryConfig: QueryConfig = {
+        text  : queryString,
+        values: [developerId]
+    }
+  
+    const queryResult = await client.query(queryConfig)
+    if(Number(queryResult.rows[0].count) > 0){
+        return next()
+    }
+    return res.status(404).json({ message: `Developer not found.` })
+  }else{
+    return next()
+  }
+  
+}
+
+
+export { 
+  ensureDevelopExists,
+  ensureProjectExists,
+  validateKeysNameEmail,
+  validateSincePreferKeys,
+  validateProjectKeys,
+  ensureDevelopBodyExists }

@@ -96,7 +96,6 @@ const updateProject = async (req: Request, res: Response): Promise<Response> => 
   const { body, params } = req;
   const updateColumns: any[] = Object.keys(body);
   const updateValues: any[] = Object.values(body);
-
   const queryTemplate: string = `
     UPDATE projects
     SET   (%I) = ROW(%L)
